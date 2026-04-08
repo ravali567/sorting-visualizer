@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sorting Visualizer</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <div class="header-left">
+      <span class="logo-icon">⬛</span>
+      <h1 class="logo-text">Sort<span class="accent">Lab</span></h1>
+    </div>
+    <p class="header-tagline">Step through sorting — one comparison at a time.</p>
+  </header>
+
+  <!-- ===== MAIN LAYOUT ===== -->
+  <main class="main-layout">
+
+    <!-- ===== SIDEBAR CONTROLS ===== -->
+    <aside class="sidebar">
+
+      <!-- Algorithm Selector -->
+      <section class="control-group">
+        <label class="control-label">Algorithm</label>
+        <div class="select-wrapper">
+          <select id="algorithmSelect">
+            <option value="bubble">Bubble Sort</option>
+            <option value="selection">Selection Sort</option>
+            <option value="insertion">Insertion Sort</option>
+          </select>
+          <span class="select-arrow">▾</span>
+        </div>
+      </section>
+
+      <!-- Complexity Info -->
+      <section class="complexity-card" id="complexityCard">
+        <div class="complexity-row">
+          <span class="complexity-label">Time</span>
+          <span class="complexity-value" id="timeComplexity">O(n²)</span>
+        </div>
+        <div class="complexity-divider"></div>
+        <div class="complexity-row">
+          <span class="complexity-label">Space</span>
+          <span class="complexity-value" id="spaceComplexity">O(1)</span>
+        </div>
+        <p class="complexity-note" id="complexityNote">Compares adjacent elements and swaps if out of order.</p>
+      </section>
+
+      <!-- Array Size -->
+      <section class="control-group">
+        <label class="control-label">Array Size — <span id="sizeLabel">20</span></label>
+        <div class="slider-track">
+          <input type="range" id="arraySizeSlider" min="5" max="60" value="20" />
+        </div>
+      </section>
+
+      <!-- Speed -->
+      <section class="control-group">
+        <label class="control-label">Speed — <span id="speedLabel">Medium</span></label>
+        <div class="slider-track">
+          <input type="range" id="speedSlider" min="1" max="5" value="3" />
+        </div>
+      </section>
+
+      <!-- Generate Button -->
+      <button class="btn btn-generate" id="generateBtn">
+        <span class="btn-icon">↺</span> New Array
+      </button>
+
+      <!-- Step Counter -->
+      <div class="step-counter">
+        <span id="stepDisplay">Step 0 / 0</span>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="progress-bar-wrapper">
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ===== VISUALIZER AREA ===== -->
+    <div class="visualizer-wrapper">
+
+      <!-- Bar Chart -->
+      <div class="bar-container" id="barContainer">
+        <!-- Bars injected by JS -->
+      </div>
+
+      <!-- Status Message -->
+      <div class="status-bar">
+        <span id="statusMsg">Generate an array and press Play or step through manually.</span>
+      </div>
+
+      <!-- Playback Controls -->
+      <div class="controls-row">
+        <button class="ctrl-btn" id="prevBtn" title="Previous Step">
+          <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
+        </button>
+        <button class="ctrl-btn ctrl-play" id="playBtn" title="Play / Pause">
+          <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          <svg class="icon-pause" viewBox="0 0 24 24" style="display:none"><path d="M6 19h4V5H6zm8-14v14h4V5z"/></svg>
+        </button>
+        <button class="ctrl-btn" id="nextBtn" title="Next Step">
+          <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6zm2.5-6 8.5 6V6z"/></svg>
+        </button>
+      </div>
+
+      <!-- Legend -->
+      <div class="legend">
+        <span class="legend-item"><span class="legend-dot dot-default"></span>Unsorted</span>
+        <span class="legend-item"><span class="legend-dot dot-compare"></span>Comparing</span>
+        <span class="legend-item"><span class="legend-dot dot-sorted"></span>Sorted</span>
+        <span class="legend-item"><span class="legend-dot dot-pivot"></span>Active / Pivot</span>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
