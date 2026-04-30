@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
-
+ 
   <!-- ===== HEADER ===== -->
   <header class="header">
     <div class="header-left">
@@ -18,13 +18,13 @@
     </div>
     <p class="header-tagline">Step through sorting — one comparison at a time.</p>
   </header>
-
+ 
   <!-- ===== MAIN LAYOUT ===== -->
   <main class="main-layout">
-
+ 
     <!-- ===== SIDEBAR CONTROLS ===== -->
     <aside class="sidebar">
-
+ 
       <!-- Algorithm Selector -->
       <section class="control-group">
         <label class="control-label">Algorithm</label>
@@ -33,11 +33,13 @@
             <option value="bubble">Bubble Sort</option>
             <option value="selection">Selection Sort</option>
             <option value="insertion">Insertion Sort</option>
+            <option value="quick">Quick Sort</option>
+            <option value="merge">Merge Sort</option>
           </select>
           <span class="select-arrow">▾</span>
         </div>
       </section>
-
+ 
       <!-- Complexity Info -->
       <section class="complexity-card" id="complexityCard">
         <div class="complexity-row">
@@ -51,7 +53,7 @@
         </div>
         <p class="complexity-note" id="complexityNote">Compares adjacent elements and swaps if out of order.</p>
       </section>
-
+ 
       <!-- Array Size -->
       <section class="control-group">
         <label class="control-label">Array Size — <span id="sizeLabel">20</span></label>
@@ -59,7 +61,7 @@
           <input type="range" id="arraySizeSlider" min="5" max="60" value="20" />
         </div>
       </section>
-
+ 
       <!-- Speed -->
       <section class="control-group">
         <label class="control-label">Speed — <span id="speedLabel">Medium</span></label>
@@ -67,39 +69,39 @@
           <input type="range" id="speedSlider" min="1" max="5" value="3" />
         </div>
       </section>
-
+ 
       <!-- Generate Button -->
       <button class="btn btn-generate" id="generateBtn">
         <span class="btn-icon">↺</span> New Array
       </button>
-
+ 
       <!-- Step Counter -->
       <div class="step-counter">
         <span id="stepDisplay">Step 0 / 0</span>
       </div>
-
+ 
       <!-- Progress Bar -->
       <div class="progress-bar-wrapper">
         <div class="progress-bar-track">
           <div class="progress-bar-fill" id="progressFill"></div>
         </div>
       </div>
-
+ 
     </aside>
-
+ 
     <!-- ===== VISUALIZER AREA ===== -->
     <div class="visualizer-wrapper">
-
+ 
       <!-- Bar Chart -->
       <div class="bar-container" id="barContainer">
         <!-- Bars injected by JS -->
       </div>
-
+ 
       <!-- Status Message -->
       <div class="status-bar">
         <span id="statusMsg">Generate an array and press Play or step through manually.</span>
       </div>
-
+ 
       <!-- Playback Controls -->
       <div class="controls-row">
         <button class="ctrl-btn" id="prevBtn" title="Previous Step">
@@ -113,7 +115,7 @@
           <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6zm2.5-6 8.5 6V6z"/></svg>
         </button>
       </div>
-
+ 
       <!-- Legend -->
       <div class="legend">
         <span class="legend-item"><span class="legend-dot dot-default"></span>Unsorted</span>
@@ -121,10 +123,10 @@
         <span class="legend-item"><span class="legend-dot dot-sorted"></span>Sorted</span>
         <span class="legend-item"><span class="legend-dot dot-pivot"></span>Active / Pivot</span>
       </div>
-
+ 
     </div>
   </main>
-
+ 
   <script src="script.js"></script>
 </body>
 </html>
