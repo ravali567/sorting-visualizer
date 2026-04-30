@@ -1,7 +1,8 @@
 /**
  * ============================================================
  *  SORT LAB — script.js
- *  Sorting Visualizer: Bubble, Selection, Insertion Sort
+ *  Sorting Visualizer: Bubble, Selection, Insertion,
+ *                      Quick Sort, Merge Sort
  *  Step-based navigation with full forward/backward support.
  * ============================================================
  */
@@ -53,6 +54,16 @@ const ALGO_INFO = {
     time:  'O(n²)',
     space: 'O(1)',
     note:  'Builds a sorted list one element at a time by inserting each into its correct position.',
+  },
+  quick: {
+    time:  'O(n log n)',
+    space: 'O(log n)',
+    note:  'Picks a pivot, partitions elements around it, then recursively sorts each partition.',
+  },
+  merge: {
+    time:  'O(n log n)',
+    space: 'O(n)',
+    note:  'Divides array in half repeatedly, then merges sorted halves back together.',
   },
 };
 
@@ -236,6 +247,184 @@ function generateInsertionSortSteps(arr) {
   return s;
 }
 
+/**
+ * Quick Sort — generates all intermediate steps.
+ * Uses last element as pivot, Lomuto partition scheme.
+ */
+function generateQuickSortSteps(arr) {
+  const s = [];
+  const a = [...arr];
+  const n = a.length;
+  const sortedSet = new Set();
+
+  s.push({ array: [...a], compare: [], sorted: [...sortedSet], pivot: null,
+    message: 'Starting Quick Sort. Click Next or Play.' });
+
+  function partition(low, high) {
+    const pivotVal = a[high];
+    s.push({ array: [...a], compare: [], sorted: [...sortedSet],
+      pivot: high,
+      message: `Partition [${low}..${high}]: Pivot = ${pivotVal} (index ${high}).` });
+
+    let i = low - 1;
+
+    for (let j = low; j < high; j++) {
+      s.push({ array: [...a], compare: [j, high], sorted: [...sortedSet],
+        pivot: high,
+        message: `Comparing a[${j}]=${a[j]} with pivot ${pivotVal}.` });
+
+      if (a[j] <= pivotVal) {
+        i++;
+        if (i !== j) {
+          [a[i], a[j]] = [a[j], a[i]];
+          s.push({ array: [...a], compare: [i, j], sorted: [...sortedSet],
+            pivot: high,
+            message: `a[${j}]=${a[j]} ≤ pivot. Swapping a[${i}] ↔ a[${j}].` });
+        } else {
+          s.push({ array: [...a], compare: [], sorted: [...sortedSet],
+            pivot: high,
+            message: `a[${j}]=${a[j]} ≤ pivot. Already in place.` });
+        }
+      }
+    }
+
+    // Place pivot in correct position
+    const pivotPos = i + 1;
+    if (pivotPos !== high) {
+      [a[pivotPos], a[high]] = [a[high], a[pivotPos]];
+      s.push({ array: [...a], compare: [pivotPos, high], sorted: [...sortedSet],
+        pivot: pivotPos,
+        message: `Placing pivot ${pivotVal} at its correct position ${pivotPos}.` });
+    }
+
+    sortedSet.add(pivotPos);
+    s.push({ array: [...a], compare: [], sorted: [...sortedSet],
+      pivot: null,
+      message: `Pivot ${pivotVal} is now at its final position ${pivotPos}. ✓` });
+
+    return pivotPos;
+  }
+
+  function quickSort(low, high) {
+    if (low >= high) {
+      if (low === high) {
+        sortedSet.add(low);
+        s.push({ array: [...a], compare: [], sorted: [...sortedSet],
+          pivot: null,
+          message: `Single element at index ${low} is trivially sorted.` });
+      }
+      return;
+    }
+    const pi = partition(low, high);
+    quickSort(low, pi - 1);
+    quickSort(pi + 1, high);
+  }
+
+  quickSort(0, n - 1);
+
+  // Mark all sorted at the end just in case
+  for (let k = 0; k < n; k++) sortedSet.add(k);
+  s.push({ array: [...a], compare: [], sorted: [...sortedSet],
+    pivot: null, message: 'Quick Sort complete! Array is fully sorted. 🎉' });
+
+  return s;
+}
+
+/**
+ * Merge Sort — generates all intermediate steps.
+ * Iterative bottom-up approach for clean step recording.
+ */
+function generateMergeSortSteps(arr) {
+  const s = [];
+  const a = [...arr];
+  const n = a.length;
+  const sortedSet = new Set();
+
+  s.push({ array: [...a], compare: [], sorted: [...sortedSet], pivot: null,
+    message: 'Starting Merge Sort. Dividing array into sub-arrays.' });
+
+  function merge(left, mid, right) {
+    const leftArr  = a.slice(left, mid + 1);
+    const rightArr = a.slice(mid + 1, right + 1);
+
+    s.push({ array: [...a], compare: [], sorted: [...sortedSet],
+      pivot: null,
+      message: `Merging sub-arrays [${left}..${mid}] and [${mid+1}..${right}].` });
+
+    let i = 0, j = 0, k = left;
+
+    while (i < leftArr.length && j < rightArr.length) {
+      const li = left + i;
+      const rj = mid + 1 + j;
+
+      s.push({ array: [...a], compare: [li, rj], sorted: [...sortedSet],
+        pivot: null,
+        message: `Comparing ${leftArr[i]} (left) vs ${rightArr[j]} (right).` });
+
+      if (leftArr[i] <= rightArr[j]) {
+        a[k] = leftArr[i];
+        s.push({ array: [...a], compare: [], sorted: [...sortedSet],
+          pivot: k,
+          message: `Placing ${leftArr[i]} at index ${k}.` });
+        i++;
+      } else {
+        a[k] = rightArr[j];
+        s.push({ array: [...a], compare: [], sorted: [...sortedSet],
+          pivot: k,
+          message: `Placing ${rightArr[j]} at index ${k}.` });
+        j++;
+      }
+      k++;
+    }
+
+    // Copy remaining elements from left half
+    while (i < leftArr.length) {
+      a[k] = leftArr[i];
+      s.push({ array: [...a], compare: [], sorted: [...sortedSet],
+        pivot: k,
+        message: `Copying remaining left element ${leftArr[i]} to index ${k}.` });
+      i++; k++;
+    }
+
+    // Copy remaining elements from right half
+    while (j < rightArr.length) {
+      a[k] = rightArr[j];
+      s.push({ array: [...a], compare: [], sorted: [...sortedSet],
+        pivot: k,
+        message: `Copying remaining right element ${rightArr[j]} to index ${k}.` });
+      j++; k++;
+    }
+
+    // Mark this merged range as sorted
+    for (let x = left; x <= right; x++) sortedSet.add(x);
+    s.push({ array: [...a], compare: [], sorted: [...sortedSet],
+      pivot: null,
+      message: `Merged [${left}..${right}] successfully.` });
+  }
+
+  function mergeSort(left, right) {
+    if (left >= right) {
+      sortedSet.add(left);
+      return;
+    }
+    const mid = Math.floor((left + right) / 2);
+    s.push({ array: [...a], compare: [], sorted: [...sortedSet],
+      pivot: null,
+      message: `Splitting [${left}..${right}] → [${left}..${mid}] and [${mid+1}..${right}].` });
+    mergeSort(left, mid);
+    mergeSort(mid + 1, right);
+    merge(left, mid, right);
+  }
+
+  mergeSort(0, n - 1);
+
+  for (let k = 0; k < n; k++) sortedSet.add(k);
+  s.push({ array: [...a], compare: [], sorted: [...sortedSet],
+    pivot: null, message: 'Merge Sort complete! Array is fully sorted. 🎉' });
+
+  return s;
+}
+
 /* ──────────────────────────────────────────────
    7. RENDER
    ────────────────────────────────────────────── */
@@ -345,9 +534,11 @@ function generateArray() {
 
   // Compute steps for selected algorithm
   const algo = algorithmSelect.value;
-  if (algo === 'bubble')    steps = generateBubbleSortSteps(array);
+  if      (algo === 'bubble')    steps = generateBubbleSortSteps(array);
   else if (algo === 'selection') steps = generateSelectionSortSteps(array);
   else if (algo === 'insertion') steps = generateInsertionSortSteps(array);
+  else if (algo === 'quick')     steps = generateQuickSortSteps(array);
+  else if (algo === 'merge')     steps = generateMergeSortSteps(array);
 
   currentStep = 0;
   renderStep(steps[0]);
